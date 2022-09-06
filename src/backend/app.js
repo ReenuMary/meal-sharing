@@ -20,11 +20,14 @@ app.use(express.json());
 app.use(cors());
 
 router.use("/meals", mealsRouter);
+app.get("/meals", (req, res) => {
+  res.send("Hi friend");
+});
 
 if (process.env.API_PATH) {
   app.use(process.env.API_PATH, router);
 } else {
-  throw "API_PATH is not set. Remember to set it in your .env file"
+  throw "API_PATH is not set. Remember to set it in your .env file";
 }
 
 // for the frontend. Will first be covered in the react class
