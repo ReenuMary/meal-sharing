@@ -49,16 +49,15 @@ router.post("/", async (request, response) => {
 router.put("/:id", async (request, response) => {
   try {
     const mealId = parseInt(request.params.id);
-    const count = await knex("meal")
-      .update({
-        title: request.body.title,
-        description: request.body.description,
-        location: request.body.location,
-        when: request.body.mealDate,
-        max_reservations: request.body.totalReservations,
-        price: request.body.price,
-      })
-      .where({ id: mealId });
+    const count = await knex("meal").where({ id: mealId }).update({
+      title: request.body.title,
+      description: request.body.description,
+      location: request.body.location,
+      when: request.body.mealDate,
+      max_reservations: request.body.totalReservations,
+      price: request.body.price,
+    });
+
     if (count) {
       response.status(200).json({ updated: count });
     } else {

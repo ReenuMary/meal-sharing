@@ -58,7 +58,7 @@ router.post("/", async (request, response) => {
         contact_name: request.body.contactName,
         contact_email: request.body.contactEmail,
       });
-      response.status(201).json({ insertedReservationId: id });
+      response.status(201).json({ newReservationId: id });
     }
   } catch (error) {
     throw error;
@@ -69,15 +69,15 @@ router.put("/:id", async (request, response) => {
   try {
     const reservationId = parseInt(request.params.id);
     const count = await knex("reservation")
+      .where({ id: reservationId })
       .update({
-        //number_of_guests , meal_id, created_date, contact_phone_number, contact_name, contact_email
         number_of_guests: request.body.guestsCount,
         meal_id: request.body.mealId,
         contact_phone_number: request.body.contactPhoneNumber,
         contact_name: request.body.contactName,
         contact_email: request.body.contactEmail,
-      })
-      .where({ id: reservationId });
+      });
+
     if (count) {
       response.status(200).json({ updated: count });
     } else {
@@ -91,9 +91,11 @@ router.put("/:id", async (request, response) => {
 router.delete("/:id", async (request, response) => {
   try {
     const reservationId = parseInt(request.params.id);
-    const count = await knex("reservation").where({ id: reservationId }).del();
-    if (count) {
-      response.status(200).json({ deleted: count });
+    const countOfDeletedRecords = await knex("reservation")
+      .where({ id: reservationId })
+      .del();
+    if (countOfDeletedRecords) {
+      response.status(200).json({ deleted: countOfDeletedRecords });
     } else {
       response.status(404).json({ message: "Record not found" });
     }
