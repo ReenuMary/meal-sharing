@@ -15,7 +15,16 @@ router.get("/:id", async (request, response) => {
   try {
     const reservationId = parseInt(request.params.id);
     const reservation = await knex("reservation")
-      .select("*")
+      .select(
+        id,
+        title,
+        description,
+        location,
+        when,
+        max_reservations,
+        price,
+        created_date
+      )
       .where({ id: reservationId });
 
     if (reservation.length === 0) {
